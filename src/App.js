@@ -4,7 +4,7 @@ import * as tf from '@tensorflow/tfjs';
 import * as mobilenet from '@tensorflow-models/mobilenet';
 
 function App() {
-	const [model, setModel] = useState();
+	const [model, setModel] = useState(null);
 	const [isLoading, setIsLoading] = useState(false);
 	const [imageURL, setImageURL] = useState(null);
 	const [results, setResults] = useState([]);
@@ -29,8 +29,7 @@ function App() {
 
 	const uploadImage = (event) => {
 		const { files } = event.target;
-		console.log(files);
-		console.log(files[0]);
+
 		if (files.length > 0) {
 			const url = URL.createObjectURL(files[0]);
 			setImageURL(url);
@@ -64,14 +63,14 @@ function App() {
 		}
 	}, [imageURL]);
 
-	// if(isLoading) {
-	// 	return <h2>Model Loading...</h2>
-	// }
+	if(isLoading) {
+		return <h2>Model Loading...</h2>
+	}
 
 
 	return (
 		<div className="App">
-			<h1 className='header'>HELLO ANH EM</h1>
+			<h1 className='header'>Image Classification App</h1>
 			<div className='inputHolder'>
 				<input className='uploadInput' 
 					type='file' accept='image/*' 
@@ -103,18 +102,20 @@ function App() {
 				{imageURL && <button className='button' onClick={handleProcess}>Process</button>}
 			</div>
 
-			<div className='recentPredictions'>
+			{history.length > 0 && <div className='recentPredictions'>
 				<h2>Recent Images</h2>
 				<div className='recentImages'>
 					{history.map((item, index) => {
 						return (
-							<div className='recentPrediction' key={index}>
-								<img src={item} alt=''></img>
+							<div className='recentPrediction' key={index} style={{margin: '10px'}}>
+								<img src={item} alt='Recent Prediction' onClick={() => {
+									return setImageURL(item)}}>
+								</img>
 							</div>
 						)
 					})}
 				</div>
-			</div>
+			</div>}
 		</div>
 	);
 }
